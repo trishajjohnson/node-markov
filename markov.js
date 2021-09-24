@@ -7,10 +7,10 @@ class MarkovMachine {
 
   constructor(text) {
     let words = text.split(/[ \r\n]+/);
-    console.log("here are words", words);
     this.words = words.filter(c => c !== "");
-    console.log("words again", this.words);
-    // this.makeChains();
+    this.makeChains();
+    // this.chains;
+    // console.log(this.chains);
   }
 
   /** set markov chains:
@@ -20,6 +20,17 @@ class MarkovMachine {
 
   makeChains() {
     // TODO
+    let chains = new Map();
+    for(let x = 0; x < this.words.length; x++) {
+      if (chains.has(this.words[x])) {
+        chains.get(this.words[x]).push(this.words[x + 1] || null);
+      }
+      else {
+        chains.set([this.words[x]], [this.words[x + 1] || null]);
+      }
+    }
+    this.chains = chains;
+    console.log(this.chains);
   }
 
 
@@ -30,8 +41,8 @@ class MarkovMachine {
   }
 }
 
-let string = "This is a song I sing when I am sad.";
+let string = "This is a song I this was I when I am sad.";
 
 const machine = new MarkovMachine(string);
 
-// console.log(machine);
+console.log(machine);
