@@ -9,8 +9,6 @@ class MarkovMachine {
     let words = text.split(/[ \r\n]+/);
     this.words = words.filter(c => c !== "");
     this.makeChains();
-    // this.chains;
-    // console.log(this.chains);
   }
 
   /** set markov chains:
@@ -21,28 +19,43 @@ class MarkovMachine {
   makeChains() {
     // TODO
     let chains = new Map();
+    
     for(let x = 0; x < this.words.length; x++) {
-      if (chains.has(this.words[x])) {
-        chains.get(this.words[x]).push(this.words[x + 1] || null);
+      let word = this.words[x] || null;
+      let nextWord = this.words[x + 1] || null;
+
+      if (chains.has(word)) {
+        chains.get(word).push(nextWord);
       }
       else {
-        chains.set([this.words[x]], [this.words[x + 1] || null]);
+        chains.set(word, [nextWord]);
       }
     }
+
     this.chains = chains;
-    console.log(this.chains);
   }
 
+  static getRandomValue(array) {
+    const value = array[Math.floor(Math.random() * array.length)];
+    return value;
+  }
 
   /** return random text from chains */
 
   makeText(numWords = 100) {
     // TODO
+    let words = Array.from(this.chains.keys());
+    let word = MarkovMachine.getRandomValue(words);
+    let text = [];
+    
+    while(text.length < numWords && word !== null) {
+      text.push(word);
+      word = MarkovMachine.getRandomValue(this.chains.get(word));
+    }
+    
+    console.log(text.join(" "))
+    return text.join(" ");
   }
 }
 
-let string = "This is a song I this was I when I am sad.";
-
-const machine = new MarkovMachine(string);
-
-console.log(machine);
+module.exports = MarkovMachine;
